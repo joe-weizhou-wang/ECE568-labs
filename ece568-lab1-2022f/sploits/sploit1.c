@@ -6,7 +6,7 @@
 
 #define TARGET "../targets/target1"
 
-#define BUFFER_SIZE 353 // saved rip - &buf
+#define BUFFER_SIZE 353 // saved rip - &buf + 8 + 1
 #define BUFFER_ADDR 0x0000000040a4fd70 // &buf
 
 int

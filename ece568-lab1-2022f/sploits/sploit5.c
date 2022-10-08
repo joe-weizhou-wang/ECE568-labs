@@ -31,6 +31,7 @@ int main(void)
 
     // Pass all attack strings to args and envs
     args[0] = TARGET; 
+    // Reorder the address to minimize the size of attack buffer
     args[1] = addr_3; 
     args[2] = NULL;
     

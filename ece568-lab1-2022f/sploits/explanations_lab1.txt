@@ -1,0 +1,36 @@
+#Weizhou Wang, 1004421262, weizhou.wang@mail.utoronto.ca
+#Jiabo Cui
+
+===================================================Target1===================================================
+This target has a buffer overflow vulnerability, because the strcpy() does not check if the character copied
+from arg to buffer is out of the boundary of buffer. If we keep copying after exceeding the boundary, the 
+character copied will overwrite the function's return address eventually. Here we use a large attack buffer to 
+overwrite the return address of lab_main() to the beginning of the attack buffer, which stores the shellcode. 
+Therefore, when the function returns, it will be redirected to execute the shellcode.
+
+===================================================Target2===================================================
+
+
+
+===================================================Target3===================================================
+This one also has a buffer overflow vulnerability, because the loop in bar() copies characters from arg to 
+buffer (appends characters to "ECE5682022FT"). Although it sets the maximum number of characters copied to be
+103, it is still larger than the size of buffer and big enough to overwrite the return address. Here we use
+a large attack buffer to overflow the target buffer, and overwrite the return address of foo() to the address 
+of shellcode. As a result, when foo() returns, the execution will be redirected to the shellcode.
+
+===================================================Target4===================================================
+Buffer overflow vulnerability: the loop in foo() copies characters from arg to buf with a limit len, which seems 
+to avoid overwriting the return address, but we can modify its value because it is in stack and within the bound 
+set by itself. Our attack buffer first overwrites len to be big enough to let us overwrite the return address, 
+then we overwrite foo()'s return address to the shellcode. Note that '\x00' in attack buffer makes args terminate, 
+so we use the env variables whenever there is a '\x00' to copy the whole attack buffer to the target’s stack.
+
+===================================================Target5===================================================
+Format string vulnerability: the snprintf() in foo() is unsafe because any format string specifier will sequencially 
+read/overwrite unauthorized content in registers/stack. We use an attack buffer with the structure below. In the 
+buffer, we add a number of %<i>x to collect enough written characters and increment the "pointer" to point to somewhere 
+in formatString that stores the address of one of bytes of foo()'s return address. Then we used %hhn to overwrite the 
+byte. We repeat the step until we overwrite the whole return address. Note that we reordered the ADDRs to minimize 
+formatString's length.
+<ADDR+3><P><ADDR+2><P><ADDR><P><ADDR+1><SHELLCODE><FORMAT_STRING>
