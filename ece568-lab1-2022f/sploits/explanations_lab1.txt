@@ -10,13 +10,10 @@ Therefore, when the function returns, it will be redirected to execute the shell
 
 ===================================================Target2===================================================
 This target also has a buffer overflow vulnerability. The for loop in the foo() function copies arg into buf byte
-by byte. Although there is a length constraint of 280, it is still longer than the 260 size of the buf, which gives
-the attacker a chance to modify the len variable first. Afterwards, length is modified into 300 so that the attacker
-is able to overwrite the return address of main to the begining of the buffer which is the shellcode. In this case, another
-thing to be noticed is that since variable j is also between the return address and the buffer and we need to leave 
-it unmodified so that the counter will function normally. Another thing is that since we encounter consecutive "0x00"
-in our attack string, we need to use env variable to cat the attack string so that all the 0x00 will be read.
-
+by byte. The extra 20 bytes gives the attacker a chance to modify the len variable first. Afterwards, length is 
+modified into 300 so that the attacker can overwrite the return address of main to the shellcode. Beisdes, since 
+variable j is also between the return address and the buffer and we need to leave it unmodified. The consecutive 
+"0x00" are handled by env variable to pass in NULL
 <shellcode><NOPs><len><NOPS><j><NOPs><return address>
 ===================================================Target3===================================================
 This one also has a buffer overflow vulnerability, because the loop in bar() copies characters from arg to 
@@ -42,10 +39,8 @@ formatString's length.
 <ADDR+3><P><ADDR+2><P><ADDR><P><ADDR+1><SHELLCODE><FORMAT_STRING>
 
 ===================================================Target6===================================================
-This target contains a double free vulnerability, q is freed twice. In this case, we have implemented two fake tags(more precisely
-2.5 tags) in the attack string. The left of the first tag is set to be pointing to the begining of p, and the right is point to 
-the second fake tag. the left of the second fake tag does not matter so we set it to NOPS and the right is set to the return address.
-When q is freed again, the block will be consolidate. Therefore, now the return string will be set to the begining of p. However, the
-right of the start of p will be changed to the return address and will damage the shell code if we put the shell code at the beginning
-of p. Therefore, we have put a jump instruction at the begining so that the return address will be first pointing to the jmp and then
-jump to the shell code followed. 
+double free vulnerability: q is freed twice. In this case, we have implemented two fake tags in the attack string. The 
+left of the first tag points to the begining of p, and the right points to the second fake tag. the left of the second 
+fake tag does not matter so we set it to NOPS and the right is set to the return address. When q is freed again, the 
+block will be consolidate. Therefore, now the return string will be set to the begining of p. A jump instruction is
+added to the begining to avoid shell code damaged during consolidation.
