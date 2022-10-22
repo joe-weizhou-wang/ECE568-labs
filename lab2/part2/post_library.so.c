@@ -100,6 +100,37 @@ const unsigned char* afl_postprocess(const unsigned char* in_buf,
   memcpy(new_buf, in_buf, *len);
   
   /* Write your code here */
+  int header_length;
+  /* Clear the checksum field*/ 
+  unsigned short* checksum_ptr = (unsigned short*)new_buf;
+  // Point to the Heaer Checksum field
+  checksum_ptr += 5;
+  // Set to zero
+  memset(checksum_ptr, 0, sizeof(short));
+  
+  /* Get the header length*/
+  // Read the IHL, second half of the first byte
+  header_length = (*new_buf & 0x0f) * 4;
+
+  /* Calculate the Checksum*/
+  unsigned short* cur_octets_pair = (short unsigned int*)new_buf;
+  unsigned int checksum = 0;
+
+  // Sum up
+  while (header_length) {
+   checksum += *cur_octets_pair++;
+   header_length -= 2;
+  }
+
+  // Deferred Carries and compute the one's complement
+  // FIXME 不知道对不对
+  while (checksum >> 16) {
+   checksum = (checksum & 0xffff) + (checksum >> 16);
+  }
+  checksum = (~checksum) & 0xffff;
+
+  // Write to header
+  memcpy(checksum_ptr, &checksum, 2);
 
   return new_buf;
 
