@@ -1,0 +1,24 @@
+#Weizhou Wang, 1004421262, weizhou.wang@mail.utoronto.ca
+#Jiabo Cui,,
+=====================================Part1=====================================
+We used the "strings ./target | grep -E '^[A-Za-z0-9_]+$'" command to extract strings
+that have one or more characters in the range [A-Za-z0-9_]. To further narrow down
+the result, we put '^' and '$' to filter out strings contain characters not in
+the range. We put this command into a bash script "create_dictionary.sh" and stored each
+line of output to a separate file in the dictionary/ folder to construct the dictionary.
+
+=====================================Part2=====================================
+Task1:
+We added code to get the length of the file and read the whole file into a string and 
+passed the string and length to the ip_parse() function being tested. We also added error 
+checking to each File I/O calls to make sure that they works correctly so that the testing 
+could focus on the ip_parse() function itself.
+Task2:
+We first cleared the original checksum as required in calculating the new checksum. Then
+we read the IHL field in the IP header to get the length of the header. After having 
+them done, we summed up each byte pair and stored in a 32-bit integer. Then, we took
+the least 16-bit of the sum and added the deferred carries to the sum. In the end, we took
+the one's complement of the 16-bit sum to be the checksum and wrote it back to the buffer.
+
+=====================================Part3=====================================
+part2可能得在确认确认
