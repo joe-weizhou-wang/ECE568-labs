@@ -36,7 +36,6 @@ int main(int argc, char * argv[])
 	int return_code = ip_parse(buffer, size);
 	if (return_code != SUCCESS) {
 		fprintf(stderr, "%s\n", GET_ERROR_STRING(return_code));
-		exit(1);
 	}
 	fclose(fileptr);
 	free(buffer);
