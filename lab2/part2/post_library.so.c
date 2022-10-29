@@ -113,7 +113,7 @@ const unsigned char* afl_postprocess(const unsigned char* in_buf,
   header_length = (*new_buf & 0x0f) * 4;
 
   /* Calculate the Checksum*/
-  unsigned short* cur_octets_pair = (short unsigned int*)new_buf;
+  unsigned short* cur_octets_pair = (unsigned short*)new_buf;
   unsigned int checksum = 0;
 
   // Sum up
