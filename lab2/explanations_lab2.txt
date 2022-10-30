@@ -1,5 +1,5 @@
 #Weizhou Wang, 1004421262, weizhou.wang@mail.utoronto.ca
-#Jiabo Cui,,
+#Jiabo Cui, 1004728556, leonardocjb.cui@mail.utoront
 =====================================Part1=====================================
 We used the "strings ./target | grep -E '^[A-Za-z0-9_]+$'" command to extract strings
 that have one or more characters in the range [A-Za-z0-9_]. To further narrow down
@@ -21,4 +21,14 @@ the least 16-bit of the sum and added the deferred carries to the sum. In the en
 the one's complement of the 16-bit sum to be the checksum and wrote it back to the buffer.
 
 =====================================Part3=====================================
-part2可能得在确认确认
+Task1: 
+We added a stream socket to connect to the server which IP address is 127.0.0.1 at port 80. After
+connected to the server, we sent the fuzzed ouput "buf" to the server and listen to the response 
+of the server and stored it in variable res.
+
+Task2: We modified the http.json which defines the grammar of http. We first modified the version 
+of http to be any <integer>.<digit> format. Then, we changed the file path to be with file name 
+hello but an extension of either php, html, txt as specified, and also xml or png which appears in 
+the input file. We also played with the host IP and port number by changing one of them at a time. 
+We tried to write a grammar for the date but it did not seem to benefit the coverage that much. As 
+a result, we managed to obtain a coverage of around 7.5%
