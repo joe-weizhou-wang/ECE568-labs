@@ -2156,7 +2156,30 @@ static void dump_request(void){
     buf = __AFL_FUZZ_TESTCASE_BUF;
     usleep(100000);
 	while(__AFL_LOOP(1000)){
-   
+		int sockfd;
+		sockfd = socket (AF_INET, SOCK_STREAM, 0);
+		char res [5000];
+
+		server_addr.sin_family = AF_INET;
+		server_addr.sin_port = htons(80);
+		server_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+
+    	if (connect(sockfd, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
+    	    close(sockfd);
+    	    perror("client: connect");
+        }
+
+		if ((send(sockfd, buf, 5000, 0)) == -1) {
+        	perror("recv");
+        	exit(1);
+		}
+		
+		shutdown(sockfd, SHUT_WR);
+		while (1){
+			if (recv(sockfd, res, 5000, 0) >= 0){
+				break;
+			}
+		}
     }
     usleep(100000);
     exit(0);
