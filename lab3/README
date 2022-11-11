@@ -49,3 +49,18 @@ The returned token should be included in the first iframe, and as a result, we u
 value from the contentDocument of the first iframe and created a URL that makes the transfer with the token. We then put
 the second URL to the src of the second iframe to finish the transfer. The two requests are sent in order with a valid token, 
 so the exploit is able to defeat the protection.
+
+Part 6 Explanation:
+we added an "or 1=1" condition to the WHERE clause to make all tuples considered True and be returned. In addition, 
+we added a "--" to the command so that the original "'" sign will be parsed as a comment and be ignored in the final SQL command.
+As a result, the newly added condition will be inserted as expected.
+
+Part 7 Explanation:
+那个trigger的syntax不太确定，因为我瞎输啥都显示通过😂
+就比如
+101; create trigger change_email before insert on employee for each row WWZ66666 update employee set E-Mail = 'ece568_22f@utoronto.ca' where userid = NEW.userid
+
+Part 8 Explanation:
+101 and ((select pin from credit where cc_number= 1111222233334444)<2364);
+101 and ((select pin from credit where cc_number= 1111222233334444)>2362);
+用小于大于的话可以算作binary search，但是不知道这是不是brute force
