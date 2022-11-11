@@ -33,8 +33,19 @@ http://localhost:8090/WebGoat/start.mvc#attack/SCREEN_ID/900?input1=na&input2=<s
 
 Part 3 Explanation:
 The Message field is exploitable.
+
+Part 4 Explanation:
+The Message field is exploitable.
 We created two iframes, where the first one has a src that requests a fund transfer, and the second one has an
 empty src initially. After the first iframe is loaded, i.e. the first request is sent, it uses the "onload" event
 handler to run a javascript to overwrite the src of the second iframe by the URL that confirms the transfer prompt. 
 As a result, the two requests will be sent in order, as the onload handler will wait until the first one is completed,
 and the prompt is by-passed by the second request.
+
+Part 5 Explanation:
+The Message field is exploitable.
+We created two iframes, where the first one starts the transfer by sending a request to the corresponding URL.
+The returned token should be included in the first iframe, and as a result, we used javascript to get the token
+value from the contentDocument of the first iframe and created a URL that makes the transfer with the token. We then put
+the second URL to the src of the second iframe to finish the transfer. The two requests are sent in order with a valid token, 
+so the exploit is able to defeat the protection.
