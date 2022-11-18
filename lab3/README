@@ -2,21 +2,20 @@
 #Jiabo Cui, ,
 
 Part 1 Explanation:
-After testing, we found that the input text bar is able to run our html code and 
-javascript functions by inserting the code into the text bar, which is a vunlnerability. 
-Therefore, we inserted a fake login region to phish the victim input his/her username 
-and password. After the victim pressed the "Login" button, the javascript function is 
-called and the victim's credentials in the form will be uploaded to the catcher servlet by an HTTP-POST 
-request. After everything is done, the script will print "Successfully Logged in!" message 
-to pretend normal.
+After testing, we found that the input text bar is able to run our HTML code and Javascript functions by inserting 
+the code into the text bar, which is a vulnerability. Therefore, we inserted a fake login region to phish the victim 
+input his/her username and password, pretending to require login before using the search functionality. After the 
+victim enters the credentials and presses the "Login" button, the Javascript function is called and the victim's 
+credentials in the form will be uploaded to the catcher servlet by an HTTP-POST request. After everything is done, 
+the script will print a "Successfully Logged in!" message to pretend normal.
 
 Part 2 Explanation:
-The field that allows users to input their three-digit codes is vunlnerable and exploitable, as the server
-does not check the input to not contain javascript. As a result, the javascript will be injected into the 
-location of the innerHTML region of the "message" element. Since when the victim clicks the button, he/she 
-has entered the card number to the input named "input2". Therefore, we can use getElementsByName() to get 
-the number. In additon, since the javascript is injected into the webpage, it is run from the website itself,
-so the same origin policy is not violated and we can access any element on the webpage.
+The field that allows users to input their three-digit codes is vulnerable and exploitable, as the server does not 
+check the input to not contain Javascript. As a result, the Javascript will be injected into the location of the 
+innerHTML region of the "message" element, as that is the location that shows the error input (i.e. the Javascript). 
+Since when the victim clicks the button, he/she has entered the card number to the input named "input2". Therefore, 
+we can use getElementsByName() to get the number. In addition, since the javascript is injected into the webpage, it 
+is run from the website itself, so the same origin policy is not violated and we can access any element on the webpage.
 
 Unencoded URL:
 http://localhost:8090/WebGoat/start.mvc#attack/SCREEN_ID/900?input1=na&input2=<script>
@@ -36,24 +35,30 @@ The Message field is exploitable.
 
 Part 4 Explanation:
 The Message field is exploitable.
-We created two iframes, where the first one has a src that requests a fund transfer, and the second one has an
-empty src initially. After the first iframe is loaded, i.e. the first request is sent, it uses the "onload" event
-handler to run a javascript to overwrite the src of the second iframe by the URL that confirms the transfer prompt. 
-As a result, the two requests will be sent in order, as the onload handler will wait until the first one is completed,
-and the prompt is by-passed by the second request.
+We created two images, where the first one has an src that requests a fund transfer, and the second one has an empty src initially. 
+After the first image is loaded, i.e. the first request is sent, it uses the "onerror" event handler to run a javascript to overwrite 
+the src of the second image by the URL that confirms the transfer. After that, the second image will fetch the new URL. 
+As a result, the two requests will be sent in order, as the "onerror" handler will wait until the first load is completed, and the 
+prompt is bypassed by the second request. Here we used "onerror" instead of "onload" because the image will not be loaded properly.
 
 Part 5 Explanation:
 The Message field is exploitable.
-We created two iframes, where the first one starts the transfer by sending a request to the corresponding URL.
-The returned token should be included in the first iframe, and as a result, we used javascript to get the token
-value from the contentDocument of the first iframe and created a URL that makes the transfer with the token. We then put
-the second URL to the src of the second iframe to finish the transfer. The two requests are sent in order with a valid token, 
-so the exploit is able to defeat the protection.
+We created two iframes, where the first one started the transfer by fetching the URL that performs the first step in the "src" parameter. 
+The returned token should be included in the first iframe, and as a result, we used Javascript in the "onload" event handler of the first 
+iframe to get the token value from the contentDocument of the first iframe and created a URL that makes the transfer with the token. We 
+then put the second URL to the src of the second iframe and the second iframe would fetch the second URL. The two requests are sent in order 
+with a valid token, so the exploit is able to defeat the protection. The same origin policy is not violated because all frames are from the 
+same origin.
+
+FIXME: Piazza148那个问题
 
 Part 6 Explanation:
-we added an "or 1=1" condition to the WHERE clause to make all tuples considered True and be returned. In addition, 
-we added a "--" to the command so that the original "'" sign will be parsed as a comment and be ignored in the final SQL command.
-As a result, the newly added condition will be inserted as expected.
+we added an "or 1=1" condition to the WHERE clause to make all tuples considered True and returned. In addition, we added a "--" to the command 
+so that the original "'" sign would be parsed as a comment and be ignored in the final SQL command. As a result, the newly added condition was 
+inserted as expected.
+
+“* Now that you have successfully performed an SQL injection, try the same type of attack on a parameterized query. Restart the lesson if you wish to return to the injectable query.”
+这个用管吗
 
 Part 7 Explanation:
 那个trigger的syntax不太确定，因为我瞎输啥都显示通过😂
@@ -61,6 +66,6 @@ Part 7 Explanation:
 101; create trigger change_email before insert on employee for each row WWZ66666 update employee set E-Mail = 'ece568_22f@utoronto.ca' where userid = NEW.userid
 
 Part 8 Explanation:
-101 and ((select pin from credit where cc_number= 1111222233334444)<2364);
-101 and ((select pin from credit where cc_number= 1111222233334444)>2362);
+101 and ((select pin from credit where cc_number= 1111222233334444)<2365);
+101 and ((select pin from credit where cc_number= 1111222233334444)>2363);
 用小于大于的话可以算作binary search，但是不知道这是不是brute force
