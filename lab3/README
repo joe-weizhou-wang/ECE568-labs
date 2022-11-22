@@ -1,5 +1,5 @@
 #Weizhou Wang, 1004421262, weizhou.wang@mail.utoronto.ca
-#Jiabo Cui, ,
+#Jiabo Cui, 1004728556, leonardocjb.cui@mail.utoronto.ca
 
 Part 1 Explanation:
 After testing, we found that the input text bar is able to run our HTML code and Javascript functions by inserting 
@@ -31,7 +31,7 @@ http://localhost:8090/WebGoat/start.mvc#attack/SCREEN_ID/900?input1=na&input2=<s
 </script>
 
 Part 3 Explanation:
-The Message field is exploitable.
+The Message field is exploitable. We created one image which is 1 by 1 and with the src that request a fund transfer of 5000.
 
 Part 4 Explanation:
 The Message field is exploitable.
@@ -50,22 +50,20 @@ then put the second URL to the src of the second iframe and the second iframe wo
 with a valid token, so the exploit is able to defeat the protection. The same origin policy is not violated because all frames are from the 
 same origin.
 
-FIXME: Piazza148那个问题
-
 Part 6 Explanation:
 we added an "or 1=1" condition to the WHERE clause to make all tuples considered True and returned. In addition, we added a "--" to the command 
 so that the original "'" sign would be parsed as a comment and be ignored in the final SQL command. As a result, the newly added condition was 
 inserted as expected.
 
-“* Now that you have successfully performed an SQL injection, try the same type of attack on a parameterized query. Restart the lesson if you wish to return to the injectable query.”
-这个用管吗
-
 Part 7 Explanation:
-那个trigger的syntax不太确定，因为我瞎输啥都显示通过😂
-就比如
-101; create trigger change_email before insert on employee for each row WWZ66666 update employee set E-Mail = 'ece568_22f@utoronto.ca' where userid = NEW.userid
+The User ID field is vulnerable. For the first stage, we first input the the userid; followed by a sql command to update the table. For
+the second stage, we have followed the trigger syntax provided to trigger when a new employee is inserted and update the email to 
+ece568_22f@utoronto.ca
 
 Part 8 Explanation:
+We have used sql syntax like below as input for the account number field. 
 101 and ((select pin from credit where cc_number= 1111222233334444)<2365);
 101 and ((select pin from credit where cc_number= 1111222233334444)>2363);
-用小于大于的话可以算作binary search，但是不知道这是不是brute force
+We have assumed that the account pin is a four digits number. Then, we conducted binary search. We can narrow down the range by half
+everytime we input by looking at if the account number is valid. As a result, we have narrow down the range to be greater than 2363 and 
+smaller than 2365. So the pin is 2364.
