@@ -1,0 +1,25 @@
+#Weizhou Wang, 1004421262, weizhou.wang@mail.utoronto.ca
+#Jiabo Cui, 1004728556, leonardocjb.cui@mail.utoronto.ca
+
+Part 1 Explanation:
+    1. We used "dig ecf.utoronto.ca" to query the ipv4 address of ecf.utoronto.ca.
+    2. We used "dig ecf.utoronto.ca NS" to query the name servers of ecf.utoronto.ca, there are two ns#.utoronto.ca name servers returned, 
+       which are the name servers of ecf.utoronto.ca.
+    3. We used "dig ecf.utoronto.ca MX" to get the name of the mail server - ecf-utoronto-ca.mail.protection.outlook.com, then we used 
+       "dig ecf-utoronto-ca.mail.protection.outlook.com" to get the IP addresses of the two mail servers.
+    4. We added options "@127.0.0.1 -p <BIND listen-on port>" to the commands in 1-3, to direct to the BIND server, 
+       specifictly:
+        4.1. dig @127.0.0.1 -p 2222 ecf.utoronto.ca
+        4.2. dig @127.0.0.1 -p 2222 ecf.utoronto.ca NS
+        4.2. dig @127.0.0.1 -p 2222 ecf.utoronto.ca MX
+        4.2. dig @127.0.0.1 -p 2222 ecf-utoronto-ca.mail.protection.outlook.com
+
+Part 2 Explanation:
+We first created a socket linstening on connections from the dig command with the port used in the command. We also created another socket 
+for communicating with the BIND server. Whenever we received a query from the dig socket, we forward the message to the BIND server using 
+the BIND socket. After the BIND server responses an answer, we forward it back to the dig command using the dig socket.
+
+Part 3 Explanation:
+还有错，写在FIXME里了
+
+Part 4 Explanation:
