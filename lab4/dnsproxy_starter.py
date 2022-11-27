@@ -26,8 +26,9 @@ LOCALHOST = "127.0.0.1"
 BUFFER_SIZE = 4096 
 
 if __name__ == "__main__":
-    # Create UDP socket for proxy
+    # Create UDP sockets for proxy
     # FIXME connection failed when using ANY
+    client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     server.bind((LOCALHOST, port))
     print("Socket binds to %s:%s..."%(LOCALHOST, port))
@@ -40,7 +41,6 @@ if __name__ == "__main__":
             print("Error! Received zero-length data")
             exit(1)
         # Forward to BIND
-        client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         client.sendto(data, (LOCALHOST, dns_port))
         print("Forwarded data to BIND at %s:%s..."%(LOCALHOST, dns_port))
         # Listen for response

