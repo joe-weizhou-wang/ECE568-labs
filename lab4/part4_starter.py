@@ -69,7 +69,7 @@ if __name__ == '__main__':
         # Check if the received packet has the new name servers
         packet = BIND_sock.recv(4096)
         packet = DNS(packet)
-        if packet.ns[0].rdata == 'ns1.spoof568attacker.net' or packet.ns[1].rdata == 'ns1.spoof568attacker.net':
+        if 'spoof568attacker' in packet.ns[0].rdata:
             print("Success...")
             BIND_sock.close()
             exit()

