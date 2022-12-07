@@ -11,8 +11,8 @@ Part 1 Explanation:
        specifictly:
         4.1. dig @127.0.0.1 -p 2222 ecf.utoronto.ca
         4.2. dig @127.0.0.1 -p 2222 ecf.utoronto.ca NS
-        4.2. dig @127.0.0.1 -p 2222 ecf.utoronto.ca MX
-        4.2. dig @127.0.0.1 -p 2222 ecf-utoronto-ca.mail.protection.outlook.com
+        4.3. dig @127.0.0.1 -p 2222 ecf.utoronto.ca MX
+        4.3. dig @127.0.0.1 -p 2222 ecf-utoronto-ca.mail.protection.outlook.com
 
 Part 2 Explanation:
 We first created a socket linstening on connections from the dig command with the port used in the command. We also created another socket 
@@ -20,12 +20,12 @@ for communicating with the BIND server. Whenever we received a query from the di
 the BIND socket. After the BIND server responses an answer, we forward it back to the dig command using the dig socket.
 
 Part 3 Explanation:
-After receiving a the responses, we would modify the contents of name servers to be "ns1.spoof568attacker.net" and "ns2.spoof568attacker.net",
-, address to be 1.11.111.9 and then sent it to the client. 
+After receiving the responses, we would modify the contents of name servers to be "ns1.spoof568attacker.net" and "ns2.spoof568attacker.net",
+, address to be 1.11.111.9 and then sent it to the client (the dig command). 
 
 Part 4 Explanation:
 We used an infinite loop, inside which we first sent a query message to the BIND server with a random domain name. Right after the message 
 was sent, we spoofed an answer message with name servers to be "ns1.spoof568attacker.net" and "ns2.spoof568attacker.net", and id to be the 
 random 8-bit number. We resent the spoofed message multiple times back to the BIND server, each with a different id, trying to match the one 
-in the actual returned message from the DNS server. We checked if the two faked name servers are in the returned answer from the BIND server 
-to see if the attack is successful. If not, we loop again and try another random domai
+in the actual returned message from the DNS server. We checked if the faked name servers' name are in the returned answer from the BIND server 
+to see if the attack is successful. If not, we loop again and try another random domain name.
