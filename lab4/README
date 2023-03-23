@@ -1,5 +1,3 @@
-#Weizhou Wang, 1004421262, weizhou.wang@mail.utoronto.ca
-#Jiabo Cui, 1004728556, leonardocjb.cui@mail.utoronto.ca
 
 Part 1 Explanation:
     1. We used "dig ecf.utoronto.ca" to query the ipv4 address of ecf.utoronto.ca.
