@@ -1,5 +1,4 @@
-#Weizhou Wang, 1004421262, weizhou.wang@mail.utoronto.ca
-#Jiabo Cui, 1004728556, leonardocjb.cui@mail.utoronto.ca
+
 
 ===================================================Target1===================================================
 This target has a buffer overflow vulnerability, because the strcpy() does not check if the character copied
